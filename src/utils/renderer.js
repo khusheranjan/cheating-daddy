@@ -738,29 +738,28 @@ function handleShortcut(shortcutKey) {
 
     if (shortcutKey === 'ctrl+enter' || shortcutKey === 'cmd+enter') {
         if (currentView === 'main') {
-            cheddar.element().handleStart();
+            // React app will handle the start via its own IPC listener
+            console.log('Start shortcut triggered');
         } else {
             captureManualScreenshot();
         }
     }
 }
 
-// Create reference to the main app element
-const cheatingDaddyApp = document.querySelector('cheating-daddy-app');
-
 // Consolidated cheddar object - all functions in one place
+// React app will populate these functions when it mounts
 const cheddar = {
-    // Element access
-    element: () => cheatingDaddyApp,
-    e: () => cheatingDaddyApp,
+    // Element access (for backwards compatibility, returns null for React)
+    element: () => null,
+    e: () => null,
 
-    // App state functions - access properties directly from the app element
-    getCurrentView: () => cheatingDaddyApp.currentView,
-    getLayoutMode: () => cheatingDaddyApp.layoutMode,
+    // App state functions - will be populated by React app
+    getCurrentView: () => 'main',
+    getLayoutMode: () => localStorage.getItem('layoutMode') || 'normal',
 
-    // Status and response functions
-    setStatus: text => cheatingDaddyApp.setStatus(text),
-    setResponse: response => cheatingDaddyApp.setResponse(response),
+    // Status and response functions - will be populated by React app
+    setStatus: text => console.log('setStatus called before React mounted:', text),
+    setResponse: response => console.log('setResponse called before React mounted:', response),
 
     // Core functionality
     initializeGemini,
